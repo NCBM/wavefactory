@@ -1,22 +1,19 @@
-from wavefactory.osc import (
-    sine_wave, triangle_wave, square_wave, sawtooth_wave, noise_wave
-)
 from wavefactory.binfmt import duplicate, Encoder
 import wave
+from wavefactory.mixing import fadeout
 
-from wavefactory.mixing import Mixer, PackedWave
+from wavefactory.synth import Harmox
 
 
-for f in (sine_wave, triangle_wave, square_wave, sawtooth_wave, noise_wave):
-    tf = lambda x: f(x, 0, 1, 44100)
-    c, c2, c3, c4 = tf(260), tf(260 * 2), tf(260 * 3), tf(260 * 4)
-    m = Mixer()
-    m += PackedWave(c, 44100)
-    m += PackedWave(c2, 44100)
-    m += PackedWave(c3, 44100)
-    m += PackedWave(c4, 44100)
-    with wave.open(f"{f.__name__}.wav", "w") as fi:
-        fi.setnchannels(2)
-        fi.setsampwidth(2)
-        fi.setframerate(48000)
-        fi.writeframes(Encoder.s16le(int(v * 0x5FFF) for v in duplicate(m.mix(48000))))
+with wave.open("test.wav", "w") as fi:
+    h = Harmox()
+    harm = [1, 0.9, 0.8, 0.7, 0.6]
+    # for i in range(5, 2, -1):
+    #     harm.append(i / 5)
+    h.harm = harm
+    w = h.synth(440, 1, 44100)
+    w = fadeout(w)
+    fi.setnchannels(2)
+    fi.setsampwidth(2)
+    fi.setframerate(44100)
+    fi.writeframes(Encoder.s16le(int(v * 0x7FFF) for v in duplicate(w)))
