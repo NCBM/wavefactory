@@ -1,7 +1,7 @@
-from wavy.generator import (
+from wavefactory.generator import (
     sine_wave, triangle_wave, square_wave, sawtooth_wave, noise_wave
 )
-from wavy.binfmt import duplicate, Encoder
+from wavefactory.binfmt import duplicate, Encoder
 import wave
 
 
