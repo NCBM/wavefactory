@@ -18,7 +18,7 @@ def _root_iter(freq: float, phase: float, t: float, rate: int):
 
 
 def no_wave(_, __, t: float, r: int):
-    return map(lambda _: 0, _root_iter(0, 0, t, r))
+    return [0.] * int(t * r)
 
 
 def sine_wave(f: float, p: float, t: float, r: int):
