@@ -18,6 +18,9 @@ class Mixer:
         self.waves.append(other)
         return self
 
+    def extend(self, it):
+        self.waves.extend(it)
+
     def mix(self, rate: int):
         remapped = [resample(list(w.data), w.rate, rate) for w in self.waves]
         for r in zip(*remapped):
