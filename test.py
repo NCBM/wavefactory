@@ -6,7 +6,7 @@ import wave
 
 
 for f in (sine_wave, triangle_wave, square_wave, sawtooth_wave, noise_wave):
-    d = f(261, 1, 44100)
+    d = f(261, 0.25, 1, 44100)
     with wave.open(f"{f.__name__}.wav", "w") as fi:
         fi.setnchannels(2)
         fi.setsampwidth(2)
