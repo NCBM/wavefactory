@@ -1,4 +1,5 @@
 from math import sin, pi
+from random import random
 
 sine = sin
 triangle = (
@@ -6,23 +7,30 @@ triangle = (
 )
 square = (lambda x: (-1) ** int(x / pi))
 sawtooth = (lambda x: (x / pi + 1) % 2 - 1)
+noise = (lambda _: 2 * random() - 1)
 
 
-def _root_iter(f: float, t: float, r: int):
-    return (2 * pi * f * t for t in (i / r for i in range(int(t * r))))
+def _root_iter(freq: float, t: float, rate: int):
+    return (
+        2 * pi * freq * t for t in (i / rate for i in range(int(t * rate)))
+    )
 
 
-def sine_wave(f: float, t: float, r: int):
-    return map(sine, _root_iter(f, t, r))
+def sine_wave(freq: float, t: float, rate: int):
+    return map(sine, _root_iter(freq, t, rate))
 
 
-def triangle_wave(f: float, t: float, r: int):
-    return map(triangle, _root_iter(f, t, r))
+def triangle_wave(freq: float, t: float, rate: int):
+    return map(triangle, _root_iter(freq, t, rate))
 
 
-def square_wave(f: float, t: float, r: int):
-    return map(square, _root_iter(f, t, r))
+def square_wave(freq: float, t: float, rate: int):
+    return map(square, _root_iter(freq, t, rate))
 
 
-def sawtooth_wave(f: float, t: float, r: int):
-    return map(sawtooth, _root_iter(f, t, r))
+def sawtooth_wave(freq: float, t: float, rate: int):
+    return map(sawtooth, _root_iter(freq, t, rate))
+
+
+def noise_wave(freq: float, t: float, rate: int):
+    return map(noise, _root_iter(freq, t, rate))
