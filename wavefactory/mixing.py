@@ -22,3 +22,7 @@ class Mixer:
         remapped = [resample(list(w.data), w.rate, rate) for w in self.waves]
         for r in zip(*remapped):
             yield sum(r) / len(r)
+
+
+def amplify(wave: Iterable[float], amp: float = 1.0):
+    return map(lambda x: x * amp, wave)
