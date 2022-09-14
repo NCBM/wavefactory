@@ -24,5 +24,23 @@ class Mixer:
             yield sum(r) / len(r)
 
 
-def amplify(wave: Iterable[float], amp: float = 1.0):
+def amplify(wave: Iterable[float], amp: float = 1.):
     return map(lambda x: x * amp, wave)
+
+
+def fadein(wave: Iterable[float]):
+    li = list(wave)
+    for i, w in enumerate(li, 1):
+        yield w * i / len(li)
+
+
+def fadeout(wave: Iterable[float]):
+    li = list(wave)
+    for i, w in enumerate(li, 1):
+        yield w * (1 - i / len(li))
+
+
+def volfade(wave: Iterable[float], start: float = 0., end: float = 1.):
+    li = list(wave)
+    for i, w in enumerate(li, 1):
+        yield w * (start + i * (end - start) / len(li))
