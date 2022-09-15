@@ -1,12 +1,12 @@
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 from wavefactory.mixing import Mixer, PackedWave, amplify
 from wavefactory.osc import sine_wave
 
 
 class Harmox:
-    def __init__(self) -> None:
-        self._harm: List[float] = []
+    def __init__(self, harm: Optional[List[float]] = None) -> None:
+        self._harm: List[float] = [] if harm is None else harm
         self.vol: float = 1.
 
     @property
