@@ -21,7 +21,9 @@ def _signed_enc(
     return res
 
 
-def _float_enc(sample: Iterable[float], byteorder: Literal["little", "big"]):
+def _float_enc(
+    sample: Iterable[float], depth: int, byteorder: Literal["little", "big"]
+):
     res = bytearray()
     if byteorder == "little":
         bos = "<"
@@ -29,8 +31,14 @@ def _float_enc(sample: Iterable[float], byteorder: Literal["little", "big"]):
         bos = ">"
     else:
         raise ValueError("byte order must be little or big")
+    if depth == 4:
+        sym = "f"
+    elif depth == 8:
+        sym = "q"
+    else:
+        raise ValueError("byte order must be little or big")
     for q in sample:
-        res.extend(pack(f"{bos}f", q))
+        res.extend(pack(f"{bos}{sym}", q))
 
 
 def _signed_dec(
@@ -42,7 +50,9 @@ def _signed_dec(
         pos += depth
 
 
-def _float_dec(data: Bytes, byteorder: Literal["little", "big"]):
+def _float_dec(
+    data: Bytes, depth: int, byteorder: Literal["little", "big"]
+):
     if byteorder == "little":
         bos = "<"
     elif byteorder == "big":
@@ -51,8 +61,8 @@ def _float_dec(data: Bytes, byteorder: Literal["little", "big"]):
         raise ValueError("byte order must be little or big")
     pos = 0
     while pos < len(data):
-        yield unpack(f"{bos}f", data[pos:pos + 4])
-        pos += 4
+        yield unpack(f"{bos}f", data[pos:pos + depth])
+        pos += depth
 
 
 class Encoder:
@@ -74,11 +84,19 @@ class Encoder:
 
     @staticmethod
     def f32le(s: Iterable[float]):
-        return _float_enc(s, "little")
+        return _float_enc(s, 4, "little")
 
     @staticmethod
     def f32be(s: Iterable[float]):
-        return _float_enc(s, "big")
+        return _float_enc(s, 4, "big")
+
+    @staticmethod
+    def f64le(s: Iterable[float]):
+        return _float_enc(s, 8, "little")
+
+    @staticmethod
+    def f64be(s: Iterable[float]):
+        return _float_enc(s, 8, "big")
 
 
 class Decoder:
@@ -100,8 +118,16 @@ class Decoder:
 
     @staticmethod
     def f32le(b: Bytes):
-        return _float_dec(b, "little")
+        return _float_dec(b, 4, "little")
 
     @staticmethod
     def f32be(b: Bytes):
-        return _float_dec(b, "big")
+        return _float_dec(b, 4, "big")
+
+    @staticmethod
+    def f64le(b: Bytes):
+        return _float_dec(b, 8, "little")
+
+    @staticmethod
+    def f64be(b: Bytes):
+        return _float_dec(b, 8, "big")
