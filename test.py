@@ -7,7 +7,7 @@ from wavefactory.instrument import Piano
 with wave.open("test.wav", "w") as fi:
     fi.setnchannels(2)
     fi.setsampwidth(2)
-    fi.setframerate(44100)
+    fi.setframerate(48000)
 
     def ww(f, t):
         w = Piano.synth(f, t, 48000)
